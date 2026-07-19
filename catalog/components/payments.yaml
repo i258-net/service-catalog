@@ -1,0 +1,14 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: payments
+  title: Payments Service
+  description: Charges cards and records transactions
+  tags: [typescript]
+spec:
+  type: service
+  lifecycle: production
+  owner: payments-team
+  system: billing
+  providesApis: [payments-api]
+  dependsOn: [resource:payments-db]

@@ -1,0 +1,29 @@
+{
+  "name": "bones",
+  "version": "0.1.0",
+  "description": "Git-backed software catalog: loads Backstage-compatible entity YAML into an in-memory graph with a CLI for inspecting and traversing it.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "packageManager": "pnpm@10.30.3",
+  "bin": {
+    "bones": "dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test test/*.test.ts",
+    "bones": "node src/cli.ts"
+  },
+  "dependencies": {
+    "yaml": "^2.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^7.0.2"
+  }
+}

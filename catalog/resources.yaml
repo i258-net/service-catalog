@@ -1,0 +1,19 @@
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: orders-db
+  description: Postgres database for the orders service
+spec:
+  type: database
+  owner: payments-team
+  system: storefront
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: payments-db
+  description: Postgres database for the payments service
+spec:
+  type: database
+  owner: payments-team
+  system: billing

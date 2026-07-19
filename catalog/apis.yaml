@@ -1,0 +1,21 @@
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: orders-api
+  description: gRPC API for creating and querying orders
+spec:
+  type: grpc
+  lifecycle: production
+  owner: payments-team
+  system: storefront
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: payments-api
+  description: REST API for charging payment methods
+spec:
+  type: openapi
+  lifecycle: production
+  owner: payments-team
+  system: billing

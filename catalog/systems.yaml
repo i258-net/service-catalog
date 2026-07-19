@@ -1,0 +1,17 @@
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: storefront
+  description: Customer-facing shopping experience
+spec:
+  owner: platform-team
+  domain: commerce
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: billing
+  description: Payment collection and invoicing
+spec:
+  owner: payments-team
+  domain: commerce
