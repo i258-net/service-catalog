@@ -11,6 +11,13 @@ async function catalogWith(yaml: string) {
   return loadCatalog(dir);
 }
 
+test("reports a missing catalog directory helpfully", async () => {
+  await assert.rejects(
+    loadCatalog(join(tmpdir(), "bones-does-not-exist")),
+    /catalog directory .* not found \(set --catalog or \$BONES_CATALOG\)/,
+  );
+});
+
 test("loads multi-document YAML files", async () => {
   const { entities, errors } = await catalogWith(`
 apiVersion: backstage.io/v1alpha1

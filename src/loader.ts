@@ -71,7 +71,17 @@ export async function loadCatalog(dir: string): Promise<LoadResult> {
 }
 
 async function findYamlFiles(dir: string): Promise<string[]> {
-  const dirents = await readdir(dir, { withFileTypes: true, recursive: true });
+  let dirents;
+  try {
+    dirents = await readdir(dir, { withFileTypes: true, recursive: true });
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code === "ENOENT") {
+      throw new Error(
+        `catalog directory "${dir}" not found (set --catalog or $BONES_CATALOG)`,
+      );
+    }
+    throw err;
+  }
   return dirents
     .filter((d) => d.isFile() && /\.ya?ml$/.test(d.name) && !d.name.startsWith("."))
     .map((d) => join(d.parentPath, d.name))

@@ -28,7 +28,9 @@ bones [--catalog <dir>] <command>
 
 The catalog directory defaults to `./catalog`, or `$BONES_CATALOG` if set.
 Every `.yaml`/`.yml` file under it (recursively, multi-document supported)
-is loaded on each run.
+is loaded on each run. This repo ships an example catalog in
+`sample-catalog/`; try the commands below with `--catalog sample-catalog`
+(or `export BONES_CATALOG=sample-catalog`).
 
 ```bash
 bones validate                      # report format errors and dangling references
@@ -76,4 +78,4 @@ pnpm build      # type-check and compile to dist/
 
 Layout: `src/loader.ts` reads and validates YAML, `src/graph.ts` builds the
 graph and traversals, `src/cli.ts` is the command-line surface, and
-`catalog/` holds a small example catalog.
+`sample-catalog/` holds a small example catalog.
