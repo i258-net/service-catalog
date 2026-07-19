@@ -1,0 +1,24 @@
+{
+  "name": "@bones/cli",
+  "version": "0.1.0",
+  "description": "Bones CLI for inspecting a Git-backed software catalog",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "bones": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "bones": "node src/cli.ts"
+  },
+  "dependencies": {
+    "@bones/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^7.0.2"
+  }
+}

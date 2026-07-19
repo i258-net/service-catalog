@@ -1,10 +1,19 @@
 #!/usr/bin/env node
 import { parseArgs } from "node:util";
-import { Graph } from "./graph.ts";
-import { loadCatalog } from "./loader.ts";
-import { MERMAID_RELATION_TYPES, toMermaid, type MermaidDirection } from "./mermaid.ts";
-import { kindFromString, parseRef, refOf } from "./ref.ts";
-import { RELATION_TYPES, type Entity, type RelationType } from "./types.ts";
+import {
+  Graph,
+  loadCatalog,
+  MERMAID_RELATION_TYPES,
+  toMermaid,
+  toCatalogSnapshot,
+  kindFromString,
+  parseRef,
+  refOf,
+  RELATION_TYPES,
+  type Entity,
+  type MermaidDirection,
+  type RelationType,
+} from "@bones/core";
 
 const USAGE = `bones — a small Git-backed software catalog
 
@@ -16,7 +25,7 @@ Commands:
   search <text>                          Search names, titles, descriptions, tags
   related <ref> [--type <relation>]      Direct relations of an entity
   deps <ref> [--reverse] [--depth <n>]   Transitive dependencies (or dependents)
-  export [--format mermaid]              Emit the graph for external viewers
+  export [--format mermaid|json]         Emit the graph for external viewers
       [--type <relation>] [--direction TB|LR]
   validate                               Check the catalog and report problems
 
@@ -141,8 +150,12 @@ async function main(argv: string[]): Promise<number> {
 
     case "export": {
       const format = (values.format ?? "mermaid").toLowerCase();
+      if (format === "json") {
+        process.stdout.write(`${JSON.stringify(toCatalogSnapshot(graph, errors), null, 2)}\n`);
+        return 0;
+      }
       if (format !== "mermaid") {
-        throw new Error(`unknown export format "${values.format}" (supported: mermaid)`);
+        throw new Error(`unknown export format "${values.format}" (supported: mermaid, json)`);
       }
       const options: Parameters<typeof toMermaid>[1] = {};
       if (values.type) {

@@ -1,29 +1,17 @@
 {
-  "name": "bones",
+  "name": "bones-monorepo",
+  "private": true,
   "version": "0.1.0",
-  "description": "Git-backed software catalog: loads Backstage-compatible entity YAML into an in-memory graph with a CLI for inspecting and traversing it.",
-  "type": "module",
+  "description": "Git-backed software catalog with CLI and graph browser",
   "license": "MIT",
   "engines": {
     "node": ">=22.18"
   },
   "packageManager": "pnpm@10.30.3",
-  "bin": {
-    "bones": "dist/cli.js"
-  },
-  "files": [
-    "dist"
-  ],
   "scripts": {
-    "build": "tsc",
-    "test": "node --test test/*.test.ts",
-    "bones": "node src/cli.ts"
-  },
-  "dependencies": {
-    "yaml": "^2.8.0"
-  },
-  "devDependencies": {
-    "@types/node": "^24.0.0",
-    "typescript": "^7.0.2"
+    "build": "pnpm --filter @bones/core build && pnpm --filter @bones/cli build && pnpm --filter @bones/web build",
+    "test": "pnpm --filter @bones/core test",
+    "bones": "pnpm --filter @bones/core build && node packages/cli/src/cli.ts",
+    "dev": "pnpm --filter @bones/core build && pnpm --filter @bones/web dev"
   }
 }

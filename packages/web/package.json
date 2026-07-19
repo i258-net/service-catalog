@@ -1,0 +1,29 @@
+{
+  "name": "@bones/web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Bones graph catalog browser",
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "start": "next start --port 3000"
+  },
+  "dependencies": {
+    "@bones/core": "workspace:*",
+    "cytoscape": "^3.32.0",
+    "cytoscape-elk": "^2.3.0",
+    "cytoscape-fcose": "^2.2.0",
+    "elkjs": "^0.9.3",
+    "minisearch": "^7.1.2",
+    "next": "^15.3.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "server-only": "^0.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "typescript": "^5.8.2"
+  }
+}
