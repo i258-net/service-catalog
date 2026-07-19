@@ -45,7 +45,15 @@ bones get orders                    # one entity, its spec highlights and relati
 bones related orders --type consumesApi
 bones deps storefront-web           # transitive dependencies, indented by depth
 bones deps orders-db --reverse      # what would break if this went away
+bones export                        # Mermaid flowchart on stdout
+bones export --type dependsOn       # only dependency edges
+bones export --direction TB > catalog.mmd
 ```
+
+Paste the export into any Mermaid preview (GitHub, Obsidian, the
+[live editor](https://mermaid.live), etc.). Only forward relations are
+drawn (`ownedBy`, `dependsOn`, `partOf`, …) so inverse pairs do not
+double every edge.
 
 Entity references are `kind:namespace/name`. Kind and namespace may be
 omitted where a default is obvious: `bones get orders` finds
@@ -81,5 +89,6 @@ pnpm build      # type-check and compile to dist/
 ```
 
 Layout: `src/loader.ts` reads and validates YAML, `src/graph.ts` builds the
-graph and traversals, `src/cli.ts` is the command-line surface, and
-`sample-catalog/` holds a small example catalog.
+graph and traversals, `src/mermaid.ts` renders Mermaid flowcharts,
+`src/cli.ts` is the command-line surface, and `sample-catalog/` holds a
+small example catalog.

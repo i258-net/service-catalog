@@ -2,6 +2,7 @@
 import { parseArgs } from "node:util";
 import { Graph } from "./graph.ts";
 import { loadCatalog } from "./loader.ts";
+import { MERMAID_RELATION_TYPES, toMermaid, type MermaidDirection } from "./mermaid.ts";
 import { kindFromString, parseRef, refOf } from "./ref.ts";
 import { RELATION_TYPES, type Entity, type RelationType } from "./types.ts";
 
@@ -15,6 +16,8 @@ Commands:
   search <text>                          Search names, titles, descriptions, tags
   related <ref> [--type <relation>]      Direct relations of an entity
   deps <ref> [--reverse] [--depth <n>]   Transitive dependencies (or dependents)
+  export [--format mermaid]              Emit the graph for external viewers
+      [--type <relation>] [--direction TB|LR]
   validate                               Check the catalog and report problems
 
 Entity references are kind:namespace/name; kind and namespace may be omitted
@@ -33,6 +36,8 @@ async function main(argv: string[]): Promise<number> {
       type: { type: "string" },
       reverse: { type: "boolean" },
       depth: { type: "string" },
+      format: { type: "string" },
+      direction: { type: "string" },
       help: { type: "boolean", short: "h" },
     },
   });
@@ -116,13 +121,7 @@ async function main(argv: string[]): Promise<number> {
 
     case "related": {
       const entity = resolve(graph, requireArg(args, "related <ref>"));
-      let type: RelationType | undefined;
-      if (values.type) {
-        type = RELATION_TYPES.find((t) => t.toLowerCase() === values.type!.toLowerCase());
-        if (!type) {
-          throw new Error(`unknown relation "${values.type}" (one of: ${RELATION_TYPES.join(", ")})`);
-        }
-      }
+      const type = values.type ? parseRelationType(values.type) : undefined;
       for (const r of graph.relationsOf(refOf(entity), type)) {
         console.log(`${r.type.padEnd(14)} ${r.target}${graph.get(r.target) ? "" : "  (missing)"}`);
       }
@@ -140,9 +139,47 @@ async function main(argv: string[]): Promise<number> {
       return 0;
     }
 
+    case "export": {
+      const format = (values.format ?? "mermaid").toLowerCase();
+      if (format !== "mermaid") {
+        throw new Error(`unknown export format "${values.format}" (supported: mermaid)`);
+      }
+      const options: Parameters<typeof toMermaid>[1] = {};
+      if (values.type) {
+        const type = parseRelationType(values.type);
+        if (!(MERMAID_RELATION_TYPES as readonly RelationType[]).includes(type)) {
+          throw new Error(
+            `export --type must be a forward relation (one of: ${MERMAID_RELATION_TYPES.join(", ")})`,
+          );
+        }
+        options.types = [type];
+      }
+      if (values.direction !== undefined) {
+        options.direction = parseDirection(values.direction);
+      }
+      process.stdout.write(toMermaid(graph, options));
+      return 0;
+    }
+
     default:
       throw new Error(`unknown command "${command}" (run bones --help)`);
   }
+}
+
+function parseRelationType(value: string): RelationType {
+  const type = RELATION_TYPES.find((t) => t.toLowerCase() === value.toLowerCase());
+  if (!type) {
+    throw new Error(`unknown relation "${value}" (one of: ${RELATION_TYPES.join(", ")})`);
+  }
+  return type;
+}
+
+function parseDirection(value: string): MermaidDirection {
+  const direction = value.toUpperCase();
+  if (direction !== "TB" && direction !== "LR") {
+    throw new Error(`unknown --direction "${value}" (one of: TB, LR)`);
+  }
+  return direction;
 }
 
 function requireArg(args: string[], usage: string): string {
