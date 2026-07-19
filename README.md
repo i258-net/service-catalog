@@ -32,6 +32,10 @@ is loaded on each run. This repo ships an example catalog in
 `sample-catalog/`; try the commands below with `--catalog sample-catalog`
 (or `export BONES_CATALOG=sample-catalog`).
 
+`catalog/` is gitignored here on purpose: clone your real catalog repo to
+`./catalog` inside this checkout and the default path just works, while the
+data stays under its own git history, separate from the tool's.
+
 ```bash
 bones validate                      # report format errors and dangling references
 bones list                          # all entities
