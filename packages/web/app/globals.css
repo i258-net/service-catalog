@@ -193,9 +193,15 @@ input {
   border-right: 1px solid var(--line);
 }
 
-.graph-canvas {
+.graph-shell {
+  position: relative;
   width: 100%;
   height: calc(100vh - 76px);
+}
+
+.graph-canvas {
+  width: 100%;
+  height: 100%;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.45), transparent),
     repeating-linear-gradient(
@@ -210,6 +216,25 @@ input {
       transparent 23px,
       rgba(148, 163, 184, 0.08) 24px
     );
+}
+
+.graph-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  max-width: min(320px, 70%);
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--panel) 96%, transparent);
+  box-shadow: var(--shadow);
+  color: var(--ink);
+  font-size: 0.78rem;
+  line-height: 1.35;
+  white-space: pre-wrap;
+  word-break: break-word;
+  pointer-events: none;
 }
 
 .inspector {
@@ -333,7 +358,7 @@ input {
     border-bottom: 1px solid var(--line);
   }
 
-  .graph-canvas,
+  .graph-shell,
   .inspector,
   .empty {
     height: 55vh;
