@@ -13,11 +13,11 @@ import {
   type Entity,
   type MermaidDirection,
   type RelationType,
-} from "@bones/core";
+} from "@service-catalog/core";
 
-const USAGE = `bones — a small Git-backed software catalog
+const USAGE = `service-catalog — a small Git-backed software catalog
 
-Usage: bones [--catalog <dir>] <command> [args]
+Usage: service-catalog [--catalog <dir>] <command> [args]
 
 Commands:
   list [--kind <kind>] [--owner <ref>]   List entities
@@ -30,9 +30,9 @@ Commands:
   validate                               Check the catalog and report problems
 
 Entity references are kind:namespace/name; kind and namespace may be omitted
-where a default is obvious (e.g. "bones get orders" tries component:default/orders).
+where a default is obvious (e.g. "service-catalog get orders" tries component:default/orders).
 
-The catalog directory defaults to ./catalog or $BONES_CATALOG.`;
+The catalog directory defaults to ./catalog or $SERVICE_CATALOG.`;
 
 async function main(argv: string[]): Promise<number> {
   const { values, positionals } = parseArgs({
@@ -57,7 +57,7 @@ async function main(argv: string[]): Promise<number> {
     return values.help || command ? 0 : 2;
   }
 
-  const dir = values.catalog ?? process.env["BONES_CATALOG"] ?? "catalog";
+  const dir = values.catalog ?? process.env["SERVICE_CATALOG"] ?? "catalog";
   const { entities, errors } = await loadCatalog(dir);
   const graph = Graph.build(entities);
 
@@ -175,7 +175,7 @@ async function main(argv: string[]): Promise<number> {
     }
 
     default:
-      throw new Error(`unknown command "${command}" (run bones --help)`);
+      throw new Error(`unknown command "${command}" (run service-catalog --help)`);
   }
 }
 
@@ -196,7 +196,7 @@ function parseDirection(value: string): MermaidDirection {
 }
 
 function requireArg(args: string[], usage: string): string {
-  if (!args[0]) throw new Error(`missing argument: bones ${usage}`);
+  if (!args[0]) throw new Error(`missing argument: service-catalog ${usage}`);
   return args[0];
 }
 
@@ -229,6 +229,6 @@ function printLine(e: Entity): void {
 try {
   process.exitCode = await main(process.argv.slice(2));
 } catch (err) {
-  console.error(`bones: ${err instanceof Error ? err.message : err}`);
+  console.error(`service-catalog: ${err instanceof Error ? err.message : err}`);
   process.exitCode = 2;
 }

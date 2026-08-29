@@ -10,7 +10,7 @@ importers:
 
   packages/cli:
     dependencies:
-      '@bones/core':
+      '@service-catalog/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -36,7 +36,7 @@ importers:
 
   packages/web:
     dependencies:
-      '@bones/core':
+      '@service-catalog/core':
         specifier: workspace:*
         version: link:../core
       cytoscape:

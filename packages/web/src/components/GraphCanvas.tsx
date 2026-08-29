@@ -1,6 +1,6 @@
 "use client";
 
-import type { GraphView, Projection } from "@bones/core/browser";
+import type { GraphView, Projection } from "@service-catalog/core/browser";
 import type { Core, ElementDefinition, EventObject } from "cytoscape";
 import { useEffect, useRef } from "react";
 

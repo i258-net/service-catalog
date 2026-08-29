@@ -6,15 +6,15 @@ import { join } from "node:path";
 import { loadCatalog } from "../src/loader.ts";
 
 async function catalogWith(yaml: string) {
-  const dir = await mkdtemp(join(tmpdir(), "bones-test-"));
+  const dir = await mkdtemp(join(tmpdir(), "service-catalog-test-"));
   await writeFile(join(dir, "catalog.yaml"), yaml);
   return loadCatalog(dir);
 }
 
 test("reports a missing catalog directory helpfully", async () => {
   await assert.rejects(
-    loadCatalog(join(tmpdir(), "bones-does-not-exist")),
-    /catalog directory .* not found \(set --catalog or \$BONES_CATALOG\)/,
+    loadCatalog(join(tmpdir(), "service-catalog-does-not-exist")),
+    /catalog directory .* not found \(set --catalog or \$SERVICE_CATALOG\)/,
   );
 });
 

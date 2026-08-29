@@ -1,5 +1,5 @@
 {
-  "name": "bones-monorepo",
+  "name": "service-catalog",
   "private": true,
   "version": "0.1.0",
   "description": "Git-backed software catalog with CLI and graph browser",
@@ -9,9 +9,10 @@
   },
   "packageManager": "pnpm@10.30.3",
   "scripts": {
-    "build": "pnpm --filter @bones/core build && pnpm --filter @bones/cli build && pnpm --filter @bones/web build",
-    "test": "pnpm --filter @bones/core test",
-    "bones": "pnpm --filter @bones/core build && node packages/cli/src/cli.ts",
-    "dev": "pnpm --filter @bones/core build && pnpm --filter @bones/web dev"
+    "build": "pnpm --filter @service-catalog/core build && pnpm --filter @service-catalog/cli build && pnpm --filter @service-catalog/web build",
+    "test": "pnpm --filter @service-catalog/core test",
+    "service-catalog": "pnpm --filter @service-catalog/core build && node packages/cli/src/cli.ts",
+    "sc": "pnpm run service-catalog",
+    "dev": "pnpm --filter @service-catalog/core build && pnpm --filter @service-catalog/web dev"
   }
 }

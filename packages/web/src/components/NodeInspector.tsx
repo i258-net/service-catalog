@@ -1,7 +1,7 @@
 "use client";
 
-import type { CatalogSnapshot, Entity } from "@bones/core/browser";
-import { refOf } from "@bones/core/browser";
+import type { CatalogSnapshot, Entity } from "@service-catalog/core/browser";
+import { refOf } from "@service-catalog/core/browser";
 
 export function NodeInspector({
   focus,

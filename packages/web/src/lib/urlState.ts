@@ -1,4 +1,4 @@
-import type { GraphView } from "@bones/core/browser";
+import type { GraphView } from "@service-catalog/core/browser";
 
 export interface UiState {
   focus: string | null;

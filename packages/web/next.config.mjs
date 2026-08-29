@@ -5,10 +5,10 @@ const packageDir = path.dirname(fileURLToPath(import.meta.url));
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ["@bones/core"],
+  transpilePackages: ["@service-catalog/core"],
   env: {
-    BONES_CATALOG:
-      process.env.BONES_CATALOG ?? path.resolve(packageDir, "../../sample-catalog"),
+    SERVICE_CATALOG:
+      process.env.SERVICE_CATALOG ?? path.resolve(packageDir, "../../sample-catalog"),
   },
 };
 

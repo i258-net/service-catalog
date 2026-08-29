@@ -3,7 +3,7 @@ import {
   type CatalogSnapshot,
   type Entity,
   refOf,
-} from "@bones/core/browser";
+} from "@service-catalog/core/browser";
 import MiniSearch from "minisearch";
 
 export interface SearchHit {

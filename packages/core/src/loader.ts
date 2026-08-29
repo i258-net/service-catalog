@@ -77,7 +77,7 @@ async function findYamlFiles(dir: string): Promise<string[]> {
   } catch (err) {
     if ((err as NodeJS.ErrnoException).code === "ENOENT") {
       throw new Error(
-        `catalog directory "${dir}" not found (set --catalog or $BONES_CATALOG)`,
+        `catalog directory "${dir}" not found (set --catalog or $SERVICE_CATALOG)`,
       );
     }
     throw err;

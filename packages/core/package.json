@@ -1,7 +1,7 @@
 {
-  "name": "@bones/core",
+  "name": "@service-catalog/core",
   "version": "0.1.0",
-  "description": "Bones catalog loader, graph, and shared utilities",
+  "description": "Software catalog loader, graph, and shared utilities",
   "type": "module",
   "license": "MIT",
   "exports": {

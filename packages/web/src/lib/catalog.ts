@@ -1,11 +1,11 @@
 import "server-only";
-import { Graph, loadCatalog, toCatalogSnapshot, type CatalogSnapshot } from "@bones/core";
+import { Graph, loadCatalog, toCatalogSnapshot, type CatalogSnapshot } from "@service-catalog/core";
 import path from "node:path";
 
 let cached: { dir: string; snapshot: CatalogSnapshot } | undefined;
 
 export function catalogDir(): string {
-  return process.env.BONES_CATALOG ?? path.resolve(process.cwd(), "../../sample-catalog");
+  return process.env.SERVICE_CATALOG ?? path.resolve(process.cwd(), "../../sample-catalog");
 }
 
 export async function loadCatalogSnapshot(): Promise<CatalogSnapshot> {

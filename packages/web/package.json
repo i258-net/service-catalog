@@ -1,15 +1,15 @@
 {
-  "name": "@bones/web",
+  "name": "@service-catalog/web",
   "version": "0.1.0",
   "private": true,
-  "description": "Bones graph catalog browser",
+  "description": "Graph catalog browser",
   "scripts": {
     "dev": "next dev --port 3000",
     "build": "next build",
     "start": "next start --port 3000"
   },
   "dependencies": {
-    "@bones/core": "workspace:*",
+    "@service-catalog/core": "workspace:*",
     "cytoscape": "^3.32.0",
     "cytoscape-elk": "^2.3.0",
     "cytoscape-fcose": "^2.2.0",

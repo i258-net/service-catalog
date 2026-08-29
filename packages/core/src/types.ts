@@ -1,4 +1,4 @@
-/** The subset of the Backstage entity format that Bones understands. */
+/** The subset of the Backstage entity format that this tool understands. */
 
 export const KINDS = [
   "Component",

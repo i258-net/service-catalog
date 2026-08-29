@@ -1,21 +1,22 @@
 {
-  "name": "@bones/cli",
+  "name": "@service-catalog/cli",
   "version": "0.1.0",
-  "description": "Bones CLI for inspecting a Git-backed software catalog",
+  "description": "CLI for inspecting a Git-backed software catalog",
   "type": "module",
   "license": "MIT",
   "bin": {
-    "bones": "./dist/cli.js"
+    "service-catalog": "./dist/cli.js",
+    "sc": "./dist/cli.js"
   },
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "tsc",
-    "bones": "node src/cli.ts"
+    "service-catalog": "node src/cli.ts"
   },
   "dependencies": {
-    "@bones/core": "workspace:*"
+    "@service-catalog/core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

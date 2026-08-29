@@ -1,7 +1,7 @@
 "use client";
 
-import type { CatalogSnapshot } from "@bones/core/browser";
-import { projectCatalog } from "@bones/core/browser";
+import type { CatalogSnapshot } from "@service-catalog/core/browser";
+import { projectCatalog } from "@service-catalog/core/browser";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { buildSearchIndex, entityMap, searchEntities } from "../lib/search";
@@ -64,7 +64,7 @@ export function CatalogApp({ snapshot }: { snapshot: CatalogSnapshot }) {
     <div className="app">
       <header className="topbar">
         <div className="brand">
-          <span className="brand-mark">Bones</span>
+          <span className="brand-mark">Service Catalog</span>
           <span className="brand-sub">catalog graph</span>
         </div>
         <SearchBox

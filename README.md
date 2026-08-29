@@ -1,6 +1,6 @@
-# Bones
+# Service Catalog
 
-Bones is a small Git-backed software catalog. It loads
+Service Catalog is a small Git-backed software catalog. It loads
 [Backstage-compatible](https://backstage.io/docs/features/software-catalog/descriptor-format)
 entity YAML files from a directory, validates the subset of the format it
 supports, normalizes entities and relationships into an in-memory graph, and
@@ -11,15 +11,15 @@ exposes:
 
 The YAML files are the source of truth. There is no database: the CLI rebuilds
 the graph in memory on every run, and the web app loads the catalog on the
-server via the shared `@bones/core` library.
+server via the shared `@service-catalog/core` library.
 
 ## Monorepo layout
 
 ```text
 packages/
-  core/   # @bones/core — loader, graph, snapshot, search helpers
-  cli/    # @bones/cli  — `bones` binary
-  web/    # @bones/web  — Next.js catalog graph UI
+  core/   # @service-catalog/core — loader, graph, snapshot, search helpers
+  cli/    # @service-catalog/cli  — `service-catalog` binary
+  web/    # @service-catalog/web  — Next.js catalog graph UI
 sample-catalog/
 ```
 
@@ -27,44 +27,44 @@ sample-catalog/
 
 ```bash
 pnpm install
-pnpm --filter @bones/core build
+pnpm --filter @service-catalog/core build
 ```
 
 ## CLI
 
 ```bash
-pnpm bones [--catalog <dir>] <command>
+pnpm service-catalog [--catalog <dir>] <command>
 ```
 
-The catalog directory defaults to `./catalog`, or `$BONES_CATALOG` if set.
+The catalog directory defaults to `./catalog`, or `$SERVICE_CATALOG` if set.
 Every `.yaml`/`.yml` file under it (recursively, multi-document supported)
 is loaded on each run. This repo ships an example catalog in
 `sample-catalog/`; try the commands below with `--catalog sample-catalog`
-(or `export BONES_CATALOG=sample-catalog`).
+(or `export SERVICE_CATALOG=sample-catalog`).
 
 `catalog/` is gitignored here on purpose: clone your real catalog repo to
 `./catalog` inside this checkout and the default path just works, while the
 data stays under its own git history, separate from the tool's.
 
 ```bash
-pnpm bones --catalog sample-catalog validate
-pnpm bones --catalog sample-catalog list
-pnpm bones --catalog sample-catalog list --kind component --owner payments-team
-pnpm bones --catalog sample-catalog search postgres
-pnpm bones --catalog sample-catalog get orders
-pnpm bones --catalog sample-catalog related orders --type consumesApi
-pnpm bones --catalog sample-catalog deps storefront-web
-pnpm bones --catalog sample-catalog deps orders-db --reverse
-pnpm bones --catalog sample-catalog export
-pnpm bones --catalog sample-catalog export --format json
-pnpm bones --catalog sample-catalog export --type dependsOn --direction TB
+pnpm service-catalog --catalog sample-catalog validate
+pnpm service-catalog --catalog sample-catalog list
+pnpm service-catalog --catalog sample-catalog list --kind component --owner payments-team
+pnpm service-catalog --catalog sample-catalog search postgres
+pnpm service-catalog --catalog sample-catalog get orders
+pnpm service-catalog --catalog sample-catalog related orders --type consumesApi
+pnpm service-catalog --catalog sample-catalog deps storefront-web
+pnpm service-catalog --catalog sample-catalog deps orders-db --reverse
+pnpm service-catalog --catalog sample-catalog export
+pnpm service-catalog --catalog sample-catalog export --format json
+pnpm service-catalog --catalog sample-catalog export --type dependsOn --direction TB
 ```
 
 Paste Mermaid export into any Mermaid preview. Only forward relations are
 drawn so inverse pairs do not double every edge.
 
 Entity references are `kind:namespace/name`. Kind and namespace may be
-omitted where a default is obvious: `pnpm bones --catalog sample-catalog get orders`
+omitted where a default is obvious: `pnpm service-catalog --catalog sample-catalog get orders`
 finds `component:default/orders` as long as the name is unambiguous.
 
 ## Graph UI
@@ -72,7 +72,7 @@ finds `component:default/orders` as long as the name is unambiguous.
 ```bash
 pnpm dev
 # opens http://localhost:3000
-# loads sample-catalog by default (override with BONES_CATALOG)
+# loads sample-catalog by default (override with SERVICE_CATALOG)
 ```
 
 The UI is a read-only local graph browser:
@@ -115,7 +115,7 @@ Everything else in `spec` is carried along untouched but not interpreted.
 ## Development
 
 ```bash
-pnpm test       # @bones/core unit tests
+pnpm test       # @service-catalog/core unit tests
 pnpm build      # core, cli, and web
 pnpm dev        # Next.js graph UI
 ```

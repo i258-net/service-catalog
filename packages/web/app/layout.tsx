@@ -15,8 +15,8 @@ const serif = IBM_Plex_Serif({
 });
 
 export const metadata = {
-  title: "Bones — catalog graph",
-  description: "Read-only graph browser for a Bones software catalog",
+  title: "Service Catalog — graph",
+  description: "Read-only graph browser for a software catalog",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

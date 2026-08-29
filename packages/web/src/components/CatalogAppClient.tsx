@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import type { CatalogSnapshot } from "@bones/core/browser";
+import type { CatalogSnapshot } from "@service-catalog/core/browser";
 import { CatalogApp, CatalogAppFallback } from "./CatalogApp";
 
 export function CatalogAppClient({ snapshot }: { snapshot: CatalogSnapshot }) {
