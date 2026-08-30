@@ -2,6 +2,7 @@
 
 import type { CatalogSnapshot, Entity } from "@service-catalog/core/browser";
 import { refOf } from "@service-catalog/core/browser";
+import { Badge } from "@i258/ui";
 
 export function NodeInspector({
   focus,
@@ -41,7 +42,9 @@ export function NodeInspector({
   return (
     <div className="inspector">
       <h2>{entity.metadata.title ?? entity.metadata.name}</h2>
-      <p className="kind-badge">{entity.kind}</p>
+      <Badge variant="accent" className="kind-badge">
+        {entity.kind}
+      </Badge>
       <code className="ref">{ref}</code>
       {entity.metadata.description && <p>{entity.metadata.description}</p>}
       {entity.metadata.tags.length > 0 && (
