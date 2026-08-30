@@ -76,5 +76,5 @@ jobs:
             echo '```'
             echo
             echo "Tags: \`${IMAGE}:main\` and \`${IMAGE}:sha-${{ github.sha }}\`."
-            echo "Private package (repo is private). k8s app dir does not exist yet — pin this digest by hand for the first deploy."
+            echo "k8s app dir does not exist yet — pin this digest by hand for the first deploy."
           } >> "$GITHUB_STEP_SUMMARY"
