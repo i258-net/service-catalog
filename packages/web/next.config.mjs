@@ -6,7 +6,7 @@ const monorepoRoot = path.resolve(packageDir, "../..");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ["@service-catalog/core"],
+  transpilePackages: ["@service-catalog/core", "@i258/ui"],
   output: "standalone",
   // Trace dependencies from the monorepo root so @service-catalog/core resolves.
   outputFileTracingRoot: monorepoRoot,

@@ -1,6 +1,7 @@
 "use client";
 
 import type { GraphView } from "@service-catalog/core/browser";
+import { Input, Label, ToggleChip } from "@i258/ui";
 
 export function ViewControls({
   view,
@@ -18,20 +19,21 @@ export function ViewControls({
   return (
     <div className="view-controls">
       {(["neighborhood", "upstream", "downstream"] as const).map((v) => (
-        <button
+        <ToggleChip
           key={v}
-          type="button"
-          className={view === v ? "active" : undefined}
+          size="sm"
+          pressed={view === v}
           disabled={disabled}
           onClick={() => onViewChange(v)}
         >
           {v}
-        </button>
+        </ToggleChip>
       ))}
-      <label className="depth">
+      <Label className="depth-field">
         depth
-        <input
+        <Input
           type="number"
+          size="sm"
           min={1}
           max={6}
           value={depth}
@@ -41,7 +43,7 @@ export function ViewControls({
             if (Number.isFinite(n) && n >= 1) onDepthChange(n);
           }}
         />
-      </label>
+      </Label>
     </div>
   );
 }

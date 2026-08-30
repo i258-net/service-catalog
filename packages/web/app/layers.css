@@ -1,0 +1,7 @@
+/*
+  Cascade layer order for @i258/ui — must be its own file imported *before*
+  `@i258/ui/styles.css`. css-loader emits `@import`s ahead of the importer's
+  own rules, so an order statement in the same file as the package import
+  lands *after* `i258-components` and cannot reorder it.
+*/
+@layer theme, base, components, i258-components, utilities;
