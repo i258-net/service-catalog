@@ -150,4 +150,4 @@ jobs:
             Reviewer: digest-only bump. The `verify image digests` check on k8s resolves this
             digest against ghcr.io, hashes the manifest bytes back to it, and maps it to its
             `sha-<commit>` tag — confirm the diff touches only the two digest lines. Argo CD
-            applies automatically after merge (automated syncPolicy with prune/selfHeal).
+            applies automatically after merge (automated syncPolicy), so merging deploys.
