@@ -1,0 +1,80 @@
+name: build
+
+# i258 cluster nodes are linux/amd64 and this repo is edited from an arm64 Mac,
+# so the image is built here rather than locally.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - Dockerfile
+      - .dockerignore
+      - .github/workflows/build.yml
+      - package.json
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+      - packages/core/**
+      - packages/web/**
+  pull_request:
+    paths:
+      - Dockerfile
+      - .dockerignore
+      - .github/workflows/build.yml
+      - package.json
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+      - packages/core/**
+      - packages/web/**
+  workflow_dispatch:
+
+env:
+  IMAGE: ghcr.io/${{ github.repository }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      digest: ${{ steps.build.outputs.digest }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        if: github.event_name != 'pull_request'
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: |
+            ${{ env.IMAGE }}:sha-${{ github.sha }}
+            ${{ env.IMAGE }}:main
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Report the digest
+        if: github.event_name != 'pull_request'
+        run: |
+          PINNED="${IMAGE}@${{ steps.build.outputs.digest }}"
+          echo "::notice title=service-catalog image::${PINNED}"
+          {
+            echo "## service-catalog image"
+            echo
+            echo '```'
+            echo "${PINNED}"
+            echo '```'
+            echo
+            echo "Tags: \`${IMAGE}:main\` and \`${IMAGE}:sha-${{ github.sha }}\`."
+            echo "Private package (repo is private). k8s app dir does not exist yet — pin this digest by hand for the first deploy."
+          } >> "$GITHUB_STEP_SUMMARY"

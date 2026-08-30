@@ -1,11 +1,17 @@
 import "server-only";
 import { Graph, loadCatalog, toCatalogSnapshot, type CatalogSnapshot } from "@service-catalog/core";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const moduleDir = path.dirname(fileURLToPath(import.meta.url));
 
 let cached: { dir: string; snapshot: CatalogSnapshot } | undefined;
 
 export function catalogDir(): string {
-  return process.env.SERVICE_CATALOG ?? path.resolve(process.cwd(), "../../sample-catalog");
+  return (
+    process.env.SERVICE_CATALOG ??
+    path.resolve(moduleDir, "../../../../sample-catalog")
+  );
 }
 
 export async function loadCatalogSnapshot(): Promise<CatalogSnapshot> {
