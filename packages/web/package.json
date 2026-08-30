@@ -9,7 +9,7 @@
     "start": "next start --port 3000"
   },
   "dependencies": {
-    "@i258/ui": "0.6.1",
+    "@i258/ui": "0.6.2",
     "@service-catalog/core": "workspace:*",
     "cytoscape": "^3.32.0",
     "cytoscape-elk": "^2.3.0",
