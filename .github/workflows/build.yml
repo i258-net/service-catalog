@@ -2,6 +2,13 @@ name: build
 
 # i258 cluster nodes are linux/amd64 and this repo is edited from an arm64 Mac,
 # so the image is built here rather than locally.
+#
+# GITHUB_TOKEN (the job token) covers the GHCR push (public repo → public
+# package). It cannot open PRs against i258-net/k8s. That write mints a
+# one-hour installation token from the ci-i258 GitHub App (org secrets
+# CI_APP_ID / CI_APP_PRIVATE_KEY, visible to this repo only; the App is
+# installed on k8s only: contents + pull requests write). Direct pushes to
+# k8s main are refused by the branch ruleset.
 
 on:
   push:
@@ -10,6 +17,7 @@ on:
       - Dockerfile
       - .dockerignore
       - .github/workflows/build.yml
+      - .github/scripts/**
       - package.json
       - pnpm-lock.yaml
       - pnpm-workspace.yaml
@@ -20,6 +28,7 @@ on:
       - Dockerfile
       - .dockerignore
       - .github/workflows/build.yml
+      - .github/scripts/**
       - package.json
       - pnpm-lock.yaml
       - pnpm-workspace.yaml
@@ -76,5 +85,69 @@ jobs:
             echo '```'
             echo
             echo "Tags: \`${IMAGE}:main\` and \`${IMAGE}:sha-${{ github.sha }}\`."
-            echo "k8s app dir does not exist yet — pin this digest by hand for the first deploy."
+            echo "Public package. A follow-up job opens a PR on i258-net/k8s to pin this digest."
           } >> "$GITHUB_STEP_SUMMARY"
+
+  bump-k8s:
+    needs: build
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Require ci-i258 App credentials
+        env:
+          APP_ID: ${{ secrets.CI_APP_ID }}
+          APP_KEY: ${{ secrets.CI_APP_PRIVATE_KEY }}
+        run: |
+          if [ -z "$APP_ID" ] || [ -z "$APP_KEY" ]; then
+            echo "::error::Org secrets CI_APP_ID / CI_APP_PRIVATE_KEY are not visible to this repo. Image was still pushed to GHCR; pin the digest by hand until they are."
+            exit 1
+          fi
+
+      - id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.CI_APP_ID }}
+          private-key: ${{ secrets.CI_APP_PRIVATE_KEY }}
+          owner: i258-net
+          repositories: k8s
+
+      - uses: actions/checkout@v4
+        with:
+          path: service-catalog
+
+      - uses: actions/checkout@v4
+        with:
+          repository: i258-net/k8s
+          token: ${{ steps.app-token.outputs.token }}
+          path: k8s
+
+      - name: Pin digest in k8s manifests
+        env:
+          DIGEST: ${{ needs.build.outputs.digest }}
+          K8S_ROOT: k8s
+        run: python3 service-catalog/.github/scripts/pin-service-catalog-digest.py
+
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          path: k8s
+          branch: service-catalog/image-digest
+          delete-branch: true
+          title: "chore(service-catalog): pin image ${{ needs.build.outputs.digest }}"
+          commit-message: "chore(service-catalog): pin image ${{ needs.build.outputs.digest }}"
+          body: |
+            Auto-opened by `i258-net/service-catalog` after GHCR publish.
+
+            Pins `ghcr.io/i258-net/service-catalog@${{ needs.build.outputs.digest }}` in
+            `clusters/home/apps/service-catalog/manifests/10-deployment.yaml` and
+            `clusters/home/apps/service-catalog/versions.env`.
+
+            Source commit: https://github.com/i258-net/service-catalog/commit/${{ github.sha }}
+            Workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            Reviewer: digest-only bump. The `verify image digests` check on k8s resolves this
+            digest against ghcr.io, hashes the manifest bytes back to it, and maps it to its
+            `sha-<commit>` tag — confirm the diff touches only the two digest lines. Argo CD
+            applies automatically after merge (automated syncPolicy), so merging deploys.
