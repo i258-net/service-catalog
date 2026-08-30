@@ -147,7 +147,7 @@ jobs:
             Source commit: https://github.com/i258-net/service-catalog/commit/${{ github.sha }}
             Workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
-            Reviewer: this is a one-line digest bump (Tier 2/3 depending on path —
-            k8s merges deploy, so treat as needing the k8s domain owner). Argo CD
-            does not sync automatically for this app — sync the `service-catalog`
-            Application after merge.
+            Reviewer: digest-only bump. The `verify image digests` check on k8s resolves this
+            digest against ghcr.io, hashes the manifest bytes back to it, and maps it to its
+            `sha-<commit>` tag — confirm the diff touches only the two digest lines. Merging
+            does NOT deploy this app: sync the `service-catalog` Argo Application afterwards.
