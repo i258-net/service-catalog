@@ -2,7 +2,6 @@
 
 import type { CatalogSnapshot } from "@service-catalog/core/browser";
 import { projectCatalog } from "@service-catalog/core/browser";
-import { ThemeToggle } from "@i258/ui";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { buildSearchIndex, entityMap, searchEntities } from "../lib/search";
@@ -96,7 +95,6 @@ export function CatalogApp({ snapshot }: { snapshot: CatalogSnapshot }) {
           }
           onDepthChange={(depth) => commit({ ...state, depth })}
         />
-        <ThemeToggle />
       </header>
 
       <main className="workspace">

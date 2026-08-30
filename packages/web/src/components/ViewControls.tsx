@@ -1,7 +1,7 @@
 "use client";
 
 import type { GraphView } from "@service-catalog/core/browser";
-import { Input, Label, ToggleChip } from "@i258/ui";
+import { Input, Label, ThemeToggle, ToggleChip } from "@i258/ui";
 
 export function ViewControls({
   view,
@@ -44,6 +44,7 @@ export function ViewControls({
           }}
         />
       </Label>
+      <ThemeToggle />
     </div>
   );
 }
