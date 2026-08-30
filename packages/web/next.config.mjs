@@ -2,14 +2,14 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const packageDir = path.dirname(fileURLToPath(import.meta.url));
+const monorepoRoot = path.resolve(packageDir, "../..");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: ["@service-catalog/core"],
-  env: {
-    SERVICE_CATALOG:
-      process.env.SERVICE_CATALOG ?? path.resolve(packageDir, "../../sample-catalog"),
-  },
+  output: "standalone",
+  // Trace dependencies from the monorepo root so @service-catalog/core resolves.
+  outputFileTracingRoot: monorepoRoot,
 };
 
 export default nextConfig;
