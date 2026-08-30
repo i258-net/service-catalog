@@ -1,4 +1,4 @@
 packages:
   - "packages/*"
 minimumReleaseAgeExclude:
-  - '@i258/ui@0.6.0'
+  - '@i258/ui@0.6.0 || 0.6.1'
