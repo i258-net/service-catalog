@@ -10,7 +10,7 @@
   "packageManager": "pnpm@10.30.3",
   "scripts": {
     "build": "pnpm --filter @service-catalog/core build && pnpm --filter @service-catalog/cli build && pnpm --filter @service-catalog/web build",
-    "test": "pnpm --filter @service-catalog/core test",
+    "test": "pnpm --filter @service-catalog/core test && pnpm --filter @service-catalog/web test",
     "service-catalog": "pnpm --filter @service-catalog/core build && node packages/cli/src/cli.ts",
     "sc": "pnpm run service-catalog",
     "dev": "pnpm --filter @service-catalog/core build && pnpm --filter @service-catalog/web dev"

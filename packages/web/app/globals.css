@@ -244,9 +244,41 @@ input {
   color: var(--muted);
 }
 
+.inspector-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0 0 0.5rem;
+}
+
 .kind-badge {
   display: inline-block;
-  margin: 0 0 0.5rem;
+}
+
+.spec-mono {
+  font-family: var(--i258-font-mono);
+  font-size: 0.82rem;
+  word-break: break-all;
+}
+
+.spec-null {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.spec-pre {
+  margin: 0;
+  padding: 0.45rem 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: var(--i258-radius-md);
+  background: color-mix(in srgb, var(--panel) 70%, transparent);
+  font-family: var(--i258-font-mono);
+  font-size: 0.72rem;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-x: auto;
+  max-height: 14rem;
 }
 
 .ref {
