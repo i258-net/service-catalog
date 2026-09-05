@@ -3,7 +3,7 @@ import { test } from "node:test";
 import { mkdtemp, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { loadCatalog } from "../src/loader.ts";
+import { loadCatalog, loadCatalogFromSources } from "../src/loader.ts";
 
 async function catalogWith(yaml: string) {
   const dir = await mkdtemp(join(tmpdir(), "service-catalog-test-"));
@@ -72,4 +72,40 @@ spec: {}
   assert.equal(entities.length, 1);
   assert.equal(errors.length, 1);
   assert.match(errors[0]!.message, /duplicate entity group:default\/twin/);
+});
+
+test("passes unknown spec inventory fields through untouched", () => {
+  const { entities, errors } = loadCatalogFromSources([
+    {
+      sourceFile: "components/media/radarr.yaml",
+      text: `
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: radarr
+  title: Radarr
+spec:
+  type: service
+  owner: user:daniel
+  system: media
+  upstream_repo: Radarr/Radarr
+  advisory_source: github
+  pin_source: none
+  pinned_version: '5.28.0.10240-ls275'
+  running_image: null
+  verified_at: '2026-09-05T17:07:00Z'
+  custom_future_field: keeps-riding
+`,
+    },
+  ]);
+  assert.deepEqual(errors, []);
+  assert.equal(entities.length, 1);
+  const spec = entities[0]!.spec;
+  assert.equal(spec["upstream_repo"], "Radarr/Radarr");
+  assert.equal(spec["advisory_source"], "github");
+  assert.equal(spec["pin_source"], "none");
+  assert.equal(spec["pinned_version"], "5.28.0.10240-ls275");
+  assert.equal(spec["running_image"], null);
+  assert.equal(spec["verified_at"], "2026-09-05T17:07:00Z");
+  assert.equal(spec["custom_future_field"], "keeps-riding");
 });

@@ -9,7 +9,13 @@ export {
   refOf,
 } from "./ref.ts";
 export { Graph } from "./graph.ts";
-export { loadCatalog, type CatalogError, type LoadResult } from "./loader.ts";
+export {
+  loadCatalog,
+  loadCatalogFromSources,
+  type CatalogError,
+  type CatalogSource,
+  type LoadResult,
+} from "./loader.ts";
 export {
   MERMAID_RELATION_TYPES,
   toMermaid,
