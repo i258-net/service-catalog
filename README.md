@@ -75,6 +75,23 @@ pnpm dev
 # loads sample-catalog by default (override with SERVICE_CATALOG)
 ```
 
+### Machine-readable catalog
+
+`GET /api/catalog.json` returns the parsed catalog as one JSON document for
+tools and agents (n8n workflows, etc.) — honeycomb's UI-vs-`/api/*` split.
+Response includes `generated_at`, `catalog_sha`, and entities grouped by kind
+(`components`, `systems`, `domains`, …). Unknown `spec` fields are passed
+through untouched (no field whitelist in the API).
+
+Load order matches honeycomb's register path: when `GITHUB_TOKEN` is set, the
+handler fetches `i258-net/catalog` from GitHub `main` at request time (override
+with `GITHUB_CATALOG_REPO` / `GITHUB_CATALOG_REF`); otherwise it reads
+`$SERVICE_CATALOG` from disk (git-sync in the cluster). Not baked at build time.
+
+`/api/health` stays a no-catalog probe. Cluster ingress must carve `/api/*` out
+of Authentik forward-auth the same way honeycomb does (k8s IngressRoute
+priority route) — that change is outside this repo.
+
 The UI is a read-only local graph browser:
 
 1. Search entities by name/metadata (normalized: `cost of living` matches

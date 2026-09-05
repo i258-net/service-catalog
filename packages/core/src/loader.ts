@@ -14,6 +14,13 @@ export interface CatalogError {
   message: string;
 }
 
+/** One YAML file's text, ready to parse without touching the filesystem. */
+export interface CatalogSource {
+  /** Catalog-relative path used in errors and Entity.sourceFile. */
+  sourceFile: string;
+  text: string;
+}
+
 /** Backstage rules: alphanumeric words joined by [-_.], max 63 chars. */
 const NAME_RE = /^[a-z0-9A-Z]+([-_.][a-z0-9A-Z]+)*$/;
 
@@ -27,29 +34,50 @@ const REF_LIST_FIELDS: Record<string, string[]> = {
   domain: [],
 };
 
-export async function loadCatalog(dir: string): Promise<LoadResult> {
+/**
+ * Parse catalog entities from in-memory YAML sources (GitHub fetch, tests).
+ * Unknown `spec` keys are kept as-is — callers must not whitelist inventory
+ * fields in application code.
+ */
+export function loadCatalogFromSources(sources: CatalogSource[]): LoadResult {
   const entities: Entity[] = [];
   const errors: CatalogError[] = [];
 
-  for (const file of await findYamlFiles(dir)) {
-    const source = await readFile(file, "utf8");
-    const relPath = relative(dir, file);
-    for (const doc of parseAllDocuments(source)) {
+  for (const { sourceFile, text } of sources) {
+    for (const doc of parseAllDocuments(text)) {
       if (doc.errors.length > 0) {
-        errors.push({ file: relPath, message: doc.errors[0]!.message });
+        errors.push({ file: sourceFile, message: doc.errors[0]!.message });
         continue;
       }
       const raw = doc.toJS();
       if (raw == null) continue; // empty document
-      const result = toEntity(raw, relPath);
+      const result = toEntity(raw, sourceFile);
       if (typeof result === "string") {
-        errors.push({ file: relPath, message: result });
+        errors.push({ file: sourceFile, message: result });
       } else {
         entities.push(result);
       }
     }
   }
 
+  return dedupeEntities(entities, errors);
+}
+
+export async function loadCatalog(dir: string): Promise<LoadResult> {
+  const sources: CatalogSource[] = [];
+  for (const file of await findYamlFiles(dir)) {
+    sources.push({
+      sourceFile: relative(dir, file),
+      text: await readFile(file, "utf8"),
+    });
+  }
+  return loadCatalogFromSources(sources);
+}
+
+function dedupeEntities(
+  entities: Entity[],
+  errors: CatalogError[],
+): LoadResult {
   // Duplicate refs are a catalog error; keep the first occurrence.
   const seen = new Map<string, Entity>();
   const unique: Entity[] = [];
@@ -140,6 +168,7 @@ function toEntity(raw: unknown, sourceFile: string): Entity | string {
         : {}),
       tags: Array.isArray(meta["tags"]) ? meta["tags"].filter((t) => typeof t === "string") : [],
     },
+    // Full mapping — inventory / advisory fields ride through without a whitelist.
     spec: specObj,
     sourceFile,
   };
