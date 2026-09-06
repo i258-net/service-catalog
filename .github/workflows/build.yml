@@ -136,7 +136,14 @@ jobs:
           branch: service-catalog/image-digest
           delete-branch: true
           title: "chore(service-catalog): pin image ${{ needs.build.outputs.digest }}"
-          commit-message: "chore(service-catalog): pin image ${{ needs.build.outputs.digest }}"
+          # Every commit on k8s needs a contiguous Co-authored-by/Signed-off-by
+          # pair for the human operator (AGENTS.md, Git Commit Identity). A runner
+          # checkout has no configured identity to read, so it is written out here.
+          commit-message: |
+            chore(service-catalog): pin image ${{ needs.build.outputs.digest }}
+
+            Co-authored-by: Daniel Newton <kdaniel.newton@gmail.com>
+            Signed-off-by: Daniel Newton <kdaniel.newton@gmail.com>
           body: |
             Auto-opened by `i258-net/service-catalog` after GHCR publish.
 
